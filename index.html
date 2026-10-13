@@ -3,25 +3,46 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>REN Buyer Calculator</title>
+  <title>Maya Realty Utara - Buyer Calculator</title>
   <style>
     * { box-sizing: border-box; }
     body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; background-color: #f8f9fa; margin: 0; padding: 15px; color: #333; }
-    h2 { text-align: center; color: #1a73e8; margin-bottom: 20px; font-size: 20px; }
     .card { background: #fff; padding: 20px; border-radius: 12px; box-shadow: 0 2px 10px rgba(0,0,0,0.08); max-width: 500px; margin: 0 auto; }
+    
+    /* Tajuk Jenama */
+    .brand-header { text-align: center; margin-bottom: 20px; }
+    .brand-header h1 { font-size: 22px; color: #1a73e8; margin: 0; font-weight: 700; }
+    .brand-header p { font-size: 14px; color: #666; margin: 4px 0 0 0; font-weight: 500; text-transform: uppercase; letter-spacing: 1px; }
+
     label { display: block; margin-top: 12px; font-weight: 600; font-size: 13px; color: #444; }
-    input { width: 100%; padding: 12px; margin-top: 5px; border: 1px solid #ccc; border-radius: 8px; font-size: 15px; background: #fff; }
+    input, select { width: 100%; padding: 12px; margin-top: 5px; border: 1px solid #ccc; border-radius: 8px; font-size: 15px; background: #fff; }
+    
+    .input-hint { font-size: 11px; color: #777; margin-top: 3px; font-style: italic; }
+    
+    /* Butang Pilihan DSR */
+    .dsr-buttons { display: flex; gap: 8px; margin-top: 5px; }
+    .dsr-btn { flex: 1; padding: 8px; border: 1px solid #1a73e8; background: #fff; color: #1a73e8; border-radius: 6px; font-size: 12px; font-weight: bold; cursor: pointer; text-align: center; }
+    .dsr-btn.active { background: #1a73e8; color: #fff; }
+
     .calc-section-title { background: #1a73e8; color: white; padding: 8px 12px; border-radius: 6px; font-size: 13px; font-weight: bold; margin-top: 20px; margin-bottom: 10px; }
     .calc-row { display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid #eee; font-size: 13px; }
     .calc-total { background: #e8f0fe; padding: 15px; border-radius: 8px; margin-top: 15px; font-weight: bold; color: #1a73e8; font-size: 15px; text-align: center; }
+    
+    /* Nota Popup Modal Simple */
+    .info-icon { display: inline-block; width: 16px; height: 16px; background: #1a73e8; color: white; border-radius: 50%; text-align: center; font-size: 11px; line-height: 16px; cursor: pointer; margin-left: 5px; }
+    .help-text { font-size: 11px; color: #1a73e8; cursor: pointer; display: inline-block; margin-top: 2px; }
   </style>
 </head>
 <body>
 
   <div class="card">
-    <h2>REN Buyer Calculator</h2>
+    <div class="brand-header">
+      <h1>Maya Realty Utara</h1>
+      <p>Buyer Calculator</p>
+    </div>
     
     <div class="calc-section-title">A. MAKLUMAT HARTANAH & PEMBELI</div>
+    
     <label>Harga rumah (RM):</label>
     <input type="number" id="c_price" value="300000" oninput="calculateAll()">
     
@@ -36,9 +57,11 @@
     
     <label>Pendapatan bersih isi rumah / bulan (RM):</label>
     <input type="number" id="c_netIncome" value="6000" oninput="calculateAll()">
+    <div class="input-hint">Gaji selepas tolak KWSP, SOCSO, PCB (Gaji bersih terkumpul suami/isteri jika loan bersama).</div>
     
     <label>Komitmen hutang bulanan sedia ada (RM):</label>
     <input type="number" id="c_commit" value="800" oninput="calculateAll()">
+    <div class="input-hint">Contoh: Loan kereta, Personal loan, PTPTN, baki 5% kad kredit.</div>
     
     <label>Baki EPF Akaun Sejahtera (Akaun 2) boleh guna (RM):</label>
     <input type="number" id="c_epf" value="10000" oninput="calculateAll()">
@@ -48,12 +71,12 @@
 
     <div class="calc-section-title">B. ANGGARAN KOS PEMBELIAN</div>
     <div class="calc-row"><span>Deposit / beza harga & pinjaman:</span> <span id="r_deposit">RM 0.00</span></div>
-    <div class="calc-row"><span>Duti setem pindah milik (MOT):</span> <span id="r_mot">RM 0.00</span></div>
+    <div class="calc-row"><span>Duti setem pindah milik (MOT): <span class="info-icon" onclick="alert('Cukai pindah hakmilik geran kepada pembeli.')">?</span></span> <span id="r_mot">RM 0.00</span></div>
     <div class="calc-row"><span>Fi guaman SPA (anggaran):</span> <span id="r_spaLegal">RM 0.00</span></div>
     <div class="calc-row"><span>Duti setem perjanjian pinjaman (0.5%):</span> <span id="r_loanStamp">RM 0.00</span></div>
     <div class="calc-row"><span>Fi guaman pinjaman (anggaran):</span> <span id="r_loanLegal">RM 0.00</span></div>
     <div class="calc-row"><span>Fi penilaian (valuation):</span> <span id="r_val">RM 650.00</span></div>
-    <div class="calc-row"><span>Kos lain-lain / disbursement:</span> <span id="r_disb">RM 1,500.00</span></div>
+    <div class="calc-row"><span>Kos lain-lain / disbursement: <span class="info-icon" onclick="alert('Kos cetakan, pendaftaran carian, dan perjalanan peguam.')">?</span></span> <span id="r_disb">RM 1,500.00</span></div>
     
     <label style="margin-top:10px;">Renovasi / pindah / utiliti (anggaran):</label>
     <input type="number" id="c_renov" value="3000" oninput="calculateAll()">
@@ -72,13 +95,30 @@
       <p style="margin:4px 0;"><b>Anggaran ansuran bulanan pinjaman:</b> RM <span id="r_monthly">0.00</span></p>
     </div>
 
-    <div class="calc-section-title">D. SEMAKAN KEMAMPUAN BULANAN</div>
-    <div class="calc-row"><span>Nisbah komitmen (DSR) selepas pinjaman:</span> <span id="r_dsr">0.00%</span></div>
+    <div class="calc-section-title">D. SEMAKAN KEMAMPUAN BULANAN (DSR)</div>
+    
+    <label style="margin-top:5px; font-weight:500;">Pilih Sasaran / Had DSR Bank:</label>
+    <div class="dsr-buttons">
+      <button type="button" class="dsr-btn active" onclick="setTargetDsr(60, this)">60% (Ketat)</button>
+      <button type="button" class="dsr-btn" onclick="setTargetDsr(70, this)">70% (Standard)</button>
+      <button type="button" class="dsr-btn" onclick="setTargetDsr(80, this)">80% (Longgar)</button>
+    </div>
+
+    <div class="calc-row" style="margin-top: 12px;"><span>Nisbah komitmen (DSR) selepas pinjaman:</span> <span id="r_dsr">0.00%</span></div>
     <div class="calc-row"><span>Baki pendapatan selepas komitmen & ansuran:</span> <span id="r_leftIncome">RM 0.00</span></div>
     <div class="calc-row"><span>Status indikatif DSR:</span> <span id="r_dsrStatus" style="font-weight:bold;">-</span></div>
   </div>
 
   <script>
+    let selectedTargetDsr = 60; // Default sasaran DSR
+
+    function setTargetDsr(val, btnElement) {
+      selectedTargetDsr = val;
+      document.querySelectorAll('.dsr-btn').forEach(b => b.classList.remove('active'));
+      btnElement.classList.add('active');
+      calculateAll();
+    }
+
     function calcSpalegal(price) {
       if (price <= 500000) {
         return price * 0.0125;
@@ -136,13 +176,13 @@
       let dsr = netIncome > 0 ? (totalCommitAfter / netIncome) * 100 : 0;
       let leftIncome = netIncome - totalCommitAfter;
 
-      let statusDsr = "Selamat (≤ 60%)";
+      let statusDsr = `Selamat (≤ ${selectedTargetDsr}%)`;
       let statusColor = "#137333";
-      if(dsr > 70) {
-        statusDsr = "Tinggi / Berisiko (> 70%)";
+      if(dsr > (selectedTargetDsr + 10)) {
+        statusDsr = "Tinggi / Berisiko (Lepas Had Sasaran)";
         statusColor = "#c5221f";
-      } else if(dsr > 60) {
-        statusDsr = "Sederhana Ketat (60% - 70%)";
+      } else if(dsr > selectedTargetDsr) {
+        statusDsr = "Sederhana Ketat (Atas Sasaran)";
         statusColor = "#b06000";
       }
 
