@@ -40,6 +40,10 @@
     
     .input-hint { font-size: 11px; color: var(--text-muted); margin-top: 3px; font-style: italic; }
 
+    /* Butang Kira Utama */
+    .calc-action-btn { width: 100%; background: #16a34a; color: white; border: none; padding: 14px; border-radius: 10px; font-size: 15px; font-weight: bold; cursor: pointer; margin-top: 15px; box-shadow: 0 4px 10px rgba(22, 163, 74, 0.2); transition: background 0.2s; }
+    .calc-action-btn:active { background: #15803d; }
+
     .calc-section-title { font-size: 12px; font-weight: 700; color: var(--primary); text-transform: uppercase; letter-spacing: 0.8px; margin-top: 18px; margin-bottom: 10px; padding-bottom: 4px; border-bottom: 2px solid var(--primary-light); }
     
     .calc-row { display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid var(--border-color); font-size: 13px; align-items: center; }
@@ -110,6 +114,9 @@
         
         <label>Booking Fee Telah Dibayar (RM):</label>
         <input type="number" id="c_booking" value="3000" oninput="calculateAll()">
+
+        <!-- Butang Kira Manual -->
+        <button type="button" class="calc-action-btn" onclick="calculateAll()">KIRA SEMULA SEKARANG</button>
       </div>
 
       <div class="card">
@@ -133,7 +140,7 @@
         <div class="calc-row" style="color:#059669;"><span>Tolak Pengeluaran EPF Akaun 2:</span> <span id="r_lessEpf">- RM 0.00</span></div>
         
         <div class="calc-total">
-          <div class="calc-total-title">Baki Tunai Perlu Standby (Tunai REN/Buyer)</div>
+          <div class="calc-total-title">Baki Tunai Perlu Standby (Buyer)</div>
           <div class="calc-total-value" id="r_finalStandby">RM 0.00</div>
         </div>
         
@@ -309,9 +316,8 @@ Thank you for your cooperation 😊</div>
       document.getElementById('r_totalCash').innerText = "RM " + totalCashNeeded.toLocaleString('en-MY', {minimumFractionDigits: 2, maximumFractionDigits: 2});
       document.getElementById('r_lessBooking').innerText = "- RM " + booking.toLocaleString('en-MY', {minimumFractionDigits: 2, maximumFractionDigits: 2});
       document.getElementById('r_lessEpf').innerText = "- RM " + epf.toLocaleString('en-MY', {minimumFractionDigits: 2, maximumFractionDigits: 2});
-      document.getElementById('r_finalStandby').innerText = "RM " + finalStandby.toLocaleString('en-MY', {minimumFractionDigits: 2, maximumFractionDz: 2}).replace('Dz', 'its'); // fallback format
-      
       document.getElementById('r_finalStandby').innerText = "RM " + finalStandby.toLocaleString('en-MY', {minimumFractionDigits: 2, maximumFractionDigits: 2});
+      
       document.getElementById('r_monthly').innerText = monthly.toLocaleString('en-MY', {minimumFractionDigits: 2, maximumFractionDigits: 2});
       document.getElementById('r_dsr').innerText = dsr.toFixed(2) + "%";
       document.getElementById('r_leftIncome').innerText = "RM " + leftIncome.toLocaleString('en-MY', {minimumFractionDigits: 2, maximumFractionDigits: 2});
