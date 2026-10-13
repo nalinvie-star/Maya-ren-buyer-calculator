@@ -35,15 +35,10 @@
     .card { background: var(--card-bg); padding: 18px; border-radius: 14px; box-shadow: 0 2px 10px rgba(0,0,0,0.04); margin-bottom: 12px; border: 1px solid var(--border-color); }
 
     label { display: block; margin-top: 12px; font-weight: 600; font-size: 12px; color: #374151; }
-    input, select { width: 100%; padding: 11px 14px; margin-top: 5px; border: 1px solid var(--border-color); border-radius: 8px; font-size: 14px; background: #f9fafb; color: var(--text-main); }
-    input:focus { outline: none; border-color: var(--accent); background: #fff; box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1); }
+    input, select, textarea { width: 100%; padding: 11px 14px; margin-top: 5px; border: 1px solid var(--border-color); border-radius: 8px; font-size: 14px; background: #f9fafb; color: var(--text-main); }
+    input:focus, textarea:focus { outline: none; border-color: var(--accent); background: #fff; box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1); }
     
     .input-hint { font-size: 11px; color: var(--text-muted); margin-top: 3px; font-style: italic; }
-    
-    .dsr-buttons { display: flex; gap: 6px; margin-top: 6px; }
-    .dsr-btn { flex: 1; padding: 8px 4px; border: 1px solid var(--border-color); background: #f9fafb; color: var(--text-main); border-radius: 7px; font-size: 11px; font-weight: 600; cursor: pointer; text-align: center; }
-    .dsr-btn.active { background: var(--primary); color: #fff; border-color: var(--primary); }
-    .dsr-note { font-size: 11px; color: #4b5563; margin-top: 8px; background: var(--primary-light); padding: 8px 10px; border-radius: 6px; border-left: 3px solid var(--primary); line-height: 1.4; }
 
     .calc-section-title { font-size: 12px; font-weight: 700; color: var(--primary); text-transform: uppercase; letter-spacing: 0.8px; margin-top: 18px; margin-bottom: 10px; padding-bottom: 4px; border-bottom: 2px solid var(--primary-light); }
     
@@ -64,8 +59,10 @@
     /* Kotak Skrip */
     .script-box { background: #fdf8f6; border: 1px solid #fed7aa; border-left: 4px solid #f97316; padding: 12px; border-radius: 0 8px 8px 0; margin-bottom: 12px; font-size: 13px; line-height: 1.5; }
     .script-box h4 { margin: 0 0 6px 0; color: #c2410c; font-size: 13px; font-weight: 700; }
-    .script-speaker { font-weight: 700; color: var(--primary); margin-top: 6px; display: block; }
-    .script-text { color: #374151; margin: 2px 0 8px 0; }
+    .script-text { color: #374151; margin: 4px 0; white-space: pre-line; background: #fff; padding: 10px; border-radius: 6px; border: 1px solid #ffedd5; font-size: 12px; }
+    
+    .copy-btn { background: #f97316; color: white; border: none; padding: 6px 12px; border-radius: 6px; font-size: 11px; font-weight: bold; cursor: pointer; margin-top: 6px; }
+    .copy-btn:active { background: #c2410c; }
   </style>
 </head>
 <body>
@@ -116,14 +113,14 @@
       </div>
 
       <div class="card">
-        <div class="calc-section-title" style="margin-top:0;">B. Anggaran Kos Pembelian</div>
-        <div class="calc-row"><span>Deposit / Beza Harga & Pinjaman:</span> <span id="r_deposit">RM 0.00</span></div>
+        <div class="calc-section-title" style="margin-top:0;">B. Anggaran Pecahan Kos Pembelian</div>
+        <div class="calc-row"><span>Booking Fee (Contoh 3.24%):</span> <span id="r_bookingDisplay">RM 0.00</span></div>
+        <div class="calc-row"><span>Baki Deposit (Contoh 6.76%):</span> <span id="r_balanceDeposit">RM 0.00</span></div>
         <div class="calc-row"><span>Duti Setem MOT (Pindah Milik):</span> <span id="r_mot">RM 0.00</span></div>
         <div class="calc-row"><span>Fi Guaman SPA (Anggaran):</span> <span id="r_spaLegal">RM 0.00</span></div>
         <div class="calc-row"><span>Duti Setem Perjanjian Pinjaman (0.5%):</span> <span id="r_loanStamp">RM 0.00</span></div>
         <div class="calc-row"><span>Fi Guaman Pinjaman (Anggaran):</span> <span id="r_loanLegal">RM 0.00</span></div>
-        <div class="calc-row"><span>Fi Penilaian (Valuation):</span> <span id="r_val">RM 650.00</span></div>
-        <div class="calc-row"><span>Kos Disbursement / Lain-lain:</span> <span id="r_disb">RM 1,500.00</span></div>
+        <div class="calc-row"><span>Fi Penilaian & Disbursement:</span> <span id="r_valDisb">RM 2,150.00</span></div>
         
         <label style="margin-top:12px;">Renovasi / Pindah / Utiliti (Anggaran):</label>
         <input type="number" id="c_renov" value="3000" oninput="calculateAll()">
@@ -131,12 +128,12 @@
 
       <div class="card">
         <div class="calc-section-title" style="margin-top:0;">C. Ringkasan Duit Perlu Disediakan</div>
-        <div class="calc-row"><span>Jumlah Tunai Diperlukan:</span> <span id="r_totalCash">RM 0.00</span></div>
-        <div class="calc-row" style="color:#059669;"><span>Tolak Booking Fee:</span> <span id="r_lessBooking">- RM 0.00</span></div>
-        <div class="calc-row" style="color:#059669;"><span>Tolak EPF Akaun 2:</span> <span id="r_lessEpf">- RM 0.00</span></div>
+        <div class="calc-row"><span>Jumlah Keseluruhan Kos & Deposit:</span> <span id="r_totalCash">RM 0.00</span></div>
+        <div class="calc-row" style="color:#059669;"><span>Tolak Booking Fee Telah Bayar:</span> <span id="r_lessBooking">- RM 0.00</span></div>
+        <div class="calc-row" style="color:#059669;"><span>Tolak Pengeluaran EPF Akaun 2:</span> <span id="r_lessEpf">- RM 0.00</span></div>
         
         <div class="calc-total">
-          <div class="calc-total-title">Anggaran Baki Tunai Standby</div>
+          <div class="calc-total-title">Baki Tunai Perlu Standby (Tunai REN/Buyer)</div>
           <div class="calc-total-value" id="r_finalStandby">RM 0.00</div>
         </div>
         
@@ -147,19 +144,10 @@
       </div>
 
       <div class="card">
-        <div class="calc-section-title" style="margin-top:0;">D. Semakan Kemampuan Bulanan (DSR)</div>
-        
-        <label style="margin-top:4px; font-weight:600;">Pilih Had Sasaran DSR Bank:</label>
-        <div class="dsr-buttons">
-          <button type="button" class="dsr-btn" onclick="setTargetDsr(60, this)">60% (Gaji ≤ RM3k)</button>
-          <button type="button" class="dsr-btn active" onclick="setTargetDsr(70, this)">70% (Standard)</button>
-          <button type="button" class="dsr-btn" onclick="setTargetDsr(80, this)">80% (Pilihan)</button>
-        </div>
-        <div class="dsr-note" id="dsrGuideNote">Nota: Gaji RM3,000 ke bawah lazimnya had bank 60%, manakala gaji > RM3,000 had bank 65%–70%.</div>
-
-        <div class="calc-row" style="margin-top: 14px;"><span>Nisbah Komitmen (DSR) Sebenar:</span> <span id="r_dsr">0.00%</span></div>
+        <div class="calc-section-title" style="margin-top:0;">D. Semakan Kelayakan DSR (Had 60%)</div>
+        <div class="calc-row" style="margin-top: 4px;"><span>Nisbah Komitmen (DSR) Sebenar:</span> <span id="r_dsr">0.00%</span></div>
         <div class="calc-row"><span>Baki Pendapatan Selepas Komitmen & Ansuran:</span> <span id="r_leftIncome">RM 0.00</span></div>
-        <div class="calc-row" style="border-bottom:none;"><span>Status Kelayakan DSR:</span> <span id="r_dsrStatus" style="font-weight:700;">-</span></div>
+        <div class="calc-row" style="border-bottom:none;"><span>Status Kelayakan DSR (Had 60%):</span> <span id="r_dsrStatus" style="font-weight:700;">-</span></div>
       </div>
     </div>
 
@@ -208,20 +196,21 @@
     <!-- TAB 3: SKRIP LAPANGAN -->
     <div id="scriptTab" class="tab-content">
       <div class="card">
-        <div class="calc-section-title" style="margin-top:0;">Skrip Lapangan REN</div>
+        <div class="calc-section-title" style="margin-top:0;">Skrip Profiling Pembeli (WhatsApp / Mesej)</div>
         
         <div class="script-box">
-          <h4>1. Skrip Menerima Panggilan / Pertanyaan Pemilik</h4>
-          <span class="script-speaker">Pemilik:</span>
-          <p class="script-text">"Salam. Saya Razif. Ingat nak minta bantuan untuk jualkan rumah saya di kawasan utara ni. Encik boleh bantu ke?"</p>
-          
-          <span class="script-speaker">REN (Maya):</span>
-          <p class="script-text">"Waalaikumussalam Tuan Razif. Terima kasih kerana hubungi Maya. Insya-Allah boleh, kawasan tersebut memang dalam laluan aktif kami. Boleh saya terangkan serba sedikit proses jualannya?"</p>
-        </div>
+          <h4>Templat Mesej Info Pembeli</h4>
+          <div class="script-text" id="scriptText">Thank you for your interest in this property. To make our initial process smoother, may I request a brief profile below: 🙏
 
-        <div class="script-box" style="background:#f0fdf4; border-color:#bbf7d0; border-left-color:#16a34a;">
-          <h4 style="color:#166534;">Tips Pantas REN:</h4>
-          <p style="margin:0; font-size:12px; color:#374151;">Selepas pemilik setuju mendengar proses, terus minta 7 maklumat asas (Jenis rumah, Alamat tanpa no rumah, Saiz, Harga, Ubah suai, Kedudukan, dan Jenis Geran) untuk semakan pasaran awal.</p>
+* Purchase status: (First-time homebuyer / Second home, etc.)
+* Current occupation: (Example: Private sector technician/ teacher/ Self-employed etc.)
+* Financing type: (Bank Loan/ LPPSA/ Cash)
+* Estimated budget/ loan eligibility: (If checked)
+
+If comfortable, you may also share a copy of your latest payslip so we can assist with an early eligibility check. All information shared will be kept strictly confidential. 
+
+Thank you for your cooperation 😊</div>
+          <button class="copy-btn" onclick="copyScript()">Salin Skrip</button>
         </div>
       </div>
     </div>
@@ -235,19 +224,11 @@
       btnElement.classList.add('active');
     }
 
-    let selectedTargetDsr = 70;
-
-    function setTargetDsr(val, btnElement) {
-      selectedTargetDsr = val;
-      document.querySelectorAll('.dsr-btn').forEach(b => b.classList.remove('active'));
-      btnElement.classList.add('active');
-      
-      let noteText = "Nota: Gaji RM3,000 ke bawah lazimnya had bank 60%.";
-      if(val === 70) noteText = "Nota: Gaji > RM3,000 lazimnya had bank 65%–70%.";
-      if(val === 80) noteText = "Nota: Had maksimum khas mengikut profil bank tertentu.";
-      document.getElementById('dsrGuideNote').innerText = noteText;
-      
-      calculateAll();
+    function copyScript() {
+      let text = document.getElementById("scriptText").innerText;
+      navigator.clipboard.writeText(text).then(() => {
+        alert("Skrip berjaya disalin!");
+      });
     }
 
     function calcSpalegal(price) {
@@ -284,16 +265,19 @@
       let renov = parseFloat(document.getElementById('c_renov').value) || 0;
 
       let loan = price * margin;
-      let deposit = price * (1 - margin);
+      let totalDeposit = price * 0.10; // 10% deposit keseluruhan
+      let balanceDeposit = totalDeposit - booking; // Baki deposit selepas tolak booking
+      if(balanceDeposit < 0) balanceDeposit = 0;
+
       let mot = calcMot(price);
       let spaLegal = calcSpalegal(price);
       let loanStamp = loan * 0.005;
       let loanLegal = calcSpalegal(loan);
-      let valuation = 650;
-      let disbursement = 1500;
+      let valuationDisb = 650 + 1500; // 650 val + 1500 disb
 
-      let totalOtherCosts = mot + spaLegal + loanStamp + loanLegal + valuation + disbursement + renov;
-      let totalCashNeeded = deposit + totalOtherCosts;
+      let totalOtherCosts = mot + spaLegal + loanStamp + loanLegal + valuationDisb + renov;
+      let totalCashNeeded = totalDeposit + totalOtherCosts; // Termasuk keseluruhan deposit 10% + kos lain
+      
       let finalStandby = totalCashNeeded - booking - epf;
       if(finalStandby < 0) finalStandby = 0;
 
@@ -307,14 +291,16 @@
       let dsr = netIncome > 0 ? (totalCommitAfter / netIncome) * 100 : 0;
       let leftIncome = netIncome - totalCommitAfter;
 
-      let statusDsr = "Lepas (Dalam Had Selamat)";
+      let targetDsr = 60; // Tetap 60%
+      let statusDsr = "Lepas (Dalam Had 60%)";
       let statusColor = "#166534";
-      if(dsr > selectedTargetDsr) {
-        statusDsr = "Melebihi Had (Berisiko Reject)";
+      if(dsr > targetDsr) {
+        statusDsr = "Melebihi Had 60% (Berisiko)";
         statusColor = "#991b1b";
       }
 
-      document.getElementById('r_deposit').innerText = "RM " + deposit.toLocaleString('en-MY', {minimumFractionDigits: 2, maximumFractionDigits: 2});
+      document.getElementById('r_bookingDisplay').innerText = "RM " + booking.toLocaleString('en-MY', {minimumFractionDigits: 2, maximumFractionDigits: 2});
+      document.getElementById('r_balanceDeposit').innerText = "RM " + balanceDeposit.toLocaleString('en-MY', {minimumFractionDigits: 2, maximumFractionDigits: 2});
       document.getElementById('r_mot').innerText = "RM " + mot.toLocaleString('en-MY', {minimumFractionDigits: 2, maximumFractionDigits: 2});
       document.getElementById('r_spaLegal').innerText = "RM " + spaLegal.toLocaleString('en-MY', {minimumFractionDigits: 2, maximumFractionDigits: 2});
       document.getElementById('r_loanStamp').innerText = "RM " + loanStamp.toLocaleString('en-MY', {minimumFractionDigits: 2, maximumFractionDigits: 2});
@@ -323,8 +309,9 @@
       document.getElementById('r_totalCash').innerText = "RM " + totalCashNeeded.toLocaleString('en-MY', {minimumFractionDigits: 2, maximumFractionDigits: 2});
       document.getElementById('r_lessBooking').innerText = "- RM " + booking.toLocaleString('en-MY', {minimumFractionDigits: 2, maximumFractionDigits: 2});
       document.getElementById('r_lessEpf').innerText = "- RM " + epf.toLocaleString('en-MY', {minimumFractionDigits: 2, maximumFractionDigits: 2});
-      document.getElementById('r_finalStandby').innerText = "RM " + finalStandby.toLocaleString('en-MY', {minimumFractionDigits: 2, maximumFractionDigits: 2});
+      document.getElementById('r_finalStandby').innerText = "RM " + finalStandby.toLocaleString('en-MY', {minimumFractionDigits: 2, maximumFractionDz: 2}).replace('Dz', 'its'); // fallback format
       
+      document.getElementById('r_finalStandby').innerText = "RM " + finalStandby.toLocaleString('en-MY', {minimumFractionDigits: 2, maximumFractionDigits: 2});
       document.getElementById('r_monthly').innerText = monthly.toLocaleString('en-MY', {minimumFractionDigits: 2, maximumFractionDigits: 2});
       document.getElementById('r_dsr').innerText = dsr.toFixed(2) + "%";
       document.getElementById('r_leftIncome').innerText = "RM " + leftIncome.toLocaleString('en-MY', {minimumFractionDigits: 2, maximumFractionDigits: 2});
