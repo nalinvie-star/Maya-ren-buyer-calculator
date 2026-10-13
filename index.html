@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="ms">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>REN Buyer Calculator</title>
+  <style>
+    * { box-sizing: border-box; }
+    body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; background-color: #f8f9fa; margin: 0; padding: 15px; color: #333; }
+    h2 { text-align: center; color: #1a73e8; margin-bottom: 20px; font-size: 20px; }
+    .card { background: #fff; padding: 20px; border-radius: 12px; box-shadow: 0 2px 10px rgba(0,0,0,0.08); max-width: 500px; margin: 0 auto; }
+    label { display: block; margin-top: 12px; font-weight: 600; font-size: 13px; color: #444; }
+    input { width: 100%; padding: 12px; margin-top: 5px; border: 1px solid #ccc; border-radius: 8px; font-size: 15px; background: #fff; }
+    .calc-section-title { background: #1a73e8; color: white; padding: 8px 12px; border-radius: 6px; font-size: 13px; font-weight: bold; margin-top: 20px; margin-bottom: 10px; }
+    .calc-row { display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid #eee; font-size: 13px; }
+    .calc-total { background: #e8f0fe; padding: 15px; border-radius: 8px; margin-top: 15px; font-weight: bold; color: #1a73e8; font-size: 15px; text-align: center; }
+  </style>
+</head>
+<body>
+
+  <div class="card">
+    <h2>REN Buyer Calculator</h2>
+    
+    <div class="calc-section-title">A. MAKLUMAT HARTANAH & PEMBELI</div>
+    <label>Harga rumah (RM):</label>
+    <input type="number" id="c_price" value="300000" oninput="calculateAll()">
+    
+    <label>Margin pinjaman (%):</label>
+    <input type="number" id="c_margin" value="90" oninput="calculateAll()">
+    
+    <label>Tempoh pinjaman (tahun):</label>
+    <input type="number" id="c_years" value="35" oninput="calculateAll()">
+    
+    <label>Kadar faedah/keuntungan setahun (%):</label>
+    <input type="number" id="c_rate" value="4.5" step="0.1" oninput="calculateAll()">
+    
+    <label>Pendapatan bersih isi rumah / bulan (RM):</label>
+    <input type="number" id="c_netIncome" value="6000" oninput="calculateAll()">
+    
+    <label>Komitmen hutang bulanan sedia ada (RM):</label>
+    <input type="number" id="c_commit" value="800" oninput="calculateAll()">
+    
+    <label>Baki EPF Akaun Sejahtera (Akaun 2) boleh guna (RM):</label>
+    <input type="number" id="c_epf" value="10000" oninput="calculateAll()">
+    
+    <label>Booking fee telah dibayar (RM):</label>
+    <input type="number" id="c_booking" value="3000" oninput="calculateAll()">
+
+    <div class="calc-section-title">B. ANGGARAN KOS PEMBELIAN</div>
+    <div class="calc-row"><span>Deposit / beza harga & pinjaman:</span> <span id="r_deposit">RM 0.00</span></div>
+    <div class="calc-row"><span>Duti setem pindah milik (MOT):</span> <span id="r_mot">RM 0.00</span></div>
+    <div class="calc-row"><span>Fi guaman SPA (anggaran):</span> <span id="r_spaLegal">RM 0.00</span></div>
+    <div class="calc-row"><span>Duti setem perjanjian pinjaman (0.5%):</span> <span id="r_loanStamp">RM 0.00</span></div>
+    <div class="calc-row"><span>Fi guaman pinjaman (anggaran):</span> <span id="r_loanLegal">RM 0.00</span></div>
+    <div class="calc-row"><span>Fi penilaian (valuation):</span> <span id="r_val">RM 650.00</span></div>
+    <div class="calc-row"><span>Kos lain-lain / disbursement:</span> <span id="r_disb">RM 1,500.00</span></div>
+    
+    <label style="margin-top:10px;">Renovasi / pindah / utiliti (anggaran):</label>
+    <input type="number" id="c_renov" value="3000" oninput="calculateAll()">
+
+    <div class="calc-section-title">C. RINGKASAN DUIT PERLU DISEDIAKAN</div>
+    <div class="calc-row"><span>Jumlah tunai diperlukan:</span> <span id="r_totalCash">RM 0.00</span></div>
+    <div class="calc-row"><span>Tolak booking fee:</span> <span id="r_lessBooking">- RM 0.00</span></div>
+    <div class="calc-row"><span>Tolak EPF Akaun 2:</span> <span id="r_lessEpf">- RM 0.00</span></div>
+    
+    <div class="calc-total">
+      ANGGARAN BAKI TUNAI STANDBY:<br>
+      <span id="r_finalStandby" style="font-size: 18px;">RM 0.00</span>
+    </div>
+    
+    <div style="margin-top: 12px; font-size: 13px; color: #555;">
+      <p style="margin:4px 0;"><b>Anggaran ansuran bulanan pinjaman:</b> RM <span id="r_monthly">0.00</span></p>
+    </div>
+
+    <div class="calc-section-title">D. SEMAKAN KEMAMPUAN BULANAN</div>
+    <div class="calc-row"><span>Nisbah komitmen (DSR) selepas pinjaman:</span> <span id="r_dsr">0.00%</span></div>
+    <div class="calc-row"><span>Baki pendapatan selepas komitmen & ansuran:</span> <span id="r_leftIncome">RM 0.00</span></div>
+    <div class="calc-row"><span>Status indikatif DSR:</span> <span id="r_dsrStatus" style="font-weight:bold;">-</span></div>
+  </div>
+
+  <script>
+    function calcSpalegal(price) {
+      if (price <= 500000) {
+        return price * 0.0125;
+      } else {
+        return (500000 * 0.0125) + ((price - 500000) * 0.01);
+      }
+    }
+
+    function calcMot(price) {
+      let mot = 0;
+      if (price > 0) {
+        if (price <= 100000) {
+          mot = price * 0.01;
+        } else if (price <= 500000) {
+          mot = (100000 * 0.01) + ((price - 100000) * 0.02);
+        } else {
+          mot = (100000 * 0.01) + (400000 * 0.02) + ((price - 500000) * 0.03);
+        }
+      }
+      return mot;
+    }
+
+    function calculateAll() {
+      let price = parseFloat(document.getElementById('c_price').value) || 0;
+      let margin = (parseFloat(document.getElementById('c_margin').value) || 0) / 100;
+      let years = parseFloat(document.getElementById('c_years').value) || 35;
+      let rate = (parseFloat(document.getElementById('c_rate').value) || 0) / 100 / 12;
+      let netIncome = parseFloat(document.getElementById('c_netIncome').value) || 0;
+      let commit = parseFloat(document.getElementById('c_commit').value) || 0;
+      let epf = parseFloat(document.getElementById('c_epf').value) || 0;
+      let booking = parseFloat(document.getElementById('c_booking').value) || 0;
+      let renov = parseFloat(document.getElementById('c_renov').value) || 0;
+
+      let loan = price * margin;
+      let deposit = price * (1 - margin);
+      let mot = calcMot(price);
+      let spaLegal = calcSpalegal(price);
+      let loanStamp = loan * 0.005;
+      let loanLegal = calcSpalegal(loan);
+      let valuation = 650;
+      let disbursement = 1500;
+
+      let totalOtherCosts = mot + spaLegal + loanStamp + loanLegal + valuation + disbursement + renov;
+      let totalCashNeeded = deposit + totalOtherCosts;
+      let finalStandby = totalCashNeeded - booking - epf;
+      if(finalStandby < 0) finalStandby = 0;
+
+      let months = years * 12;
+      let monthly = 0;
+      if (rate > 0 && months > 0) {
+        monthly = (loan * rate * Math.pow(1 + rate, months)) / (Math.pow(1 + rate, months) - 1);
+      }
+
+      let totalCommitAfter = commit + monthly;
+      let dsr = netIncome > 0 ? (totalCommitAfter / netIncome) * 100 : 0;
+      let leftIncome = netIncome - totalCommitAfter;
+
+      let statusDsr = "Selamat (≤ 60%)";
+      let statusColor = "#137333";
+      if(dsr > 70) {
+        statusDsr = "Tinggi / Berisiko (> 70%)";
+        statusColor = "#c5221f";
+      } else if(dsr > 60) {
+        statusDsr = "Sederhana Ketat (60% - 70%)";
+        statusColor = "#b06000";
+      }
+
+      document.getElementById('r_deposit').innerText = "RM " + deposit.toLocaleString('en-MY', {minimumFractionDigits: 2, maximumFractionDigits: 2});
+      document.getElementById('r_mot').innerText = "RM " + mot.toLocaleString('en-MY', {minimumFractionDigits: 2, maximumFractionDigits: 2});
+      document.getElementById('r_spaLegal').innerText = "RM " + spaLegal.toLocaleString('en-MY', {minimumFractionDigits: 2, maximumFractionDigits: 2});
+      document.getElementById('r_loanStamp').innerText = "RM " + loanStamp.toLocaleString('en-MY', {minimumFractionDigits: 2, maximumFractionDigits: 2});
+      document.getElementById('r_loanLegal').innerText = "RM " + loanLegal.toLocaleString('en-MY', {minimumFractionDigits: 2, maximumFractionDigits: 2});
+      
+      document.getElementById('r_totalCash').innerText = "RM " + totalCashNeeded.toLocaleString('en-MY', {minimumFractionDigits: 2, maximumFractionDigits: 2});
+      document.getElementById('r_lessBooking').innerText = "- RM " + booking.toLocaleString('en-MY', {minimumFractionDigits: 2, maximumFractionDigits: 2});
+      document.getElementById('r_lessEpf').innerText = "- RM " + epf.toLocaleString('en-MY', {minimumFractionDigits: 2, maximumFractionDigits: 2});
+      document.getElementById('r_finalStandby').innerText = "RM " + finalStandby.toLocaleString('en-MY', {minimumFractionDigits: 2, maximumFractionDigits: 2});
+      
+      document.getElementById('r_monthly').innerText = monthly.toLocaleString('en-MY', {minimumFractionDigits: 2, maximumFractionDigits: 2});
+      document.getElementById('r_dsr').innerText = dsr.toFixed(2) + "%";
+      document.getElementById('r_leftIncome').innerText = "RM " + leftIncome.toLocaleString('en-MY', {minimumFractionDigits: 2, maximumFractionDigits: 2});
+      
+      let statusEl = document.getElementById('r_dsrStatus');
+      statusEl.innerText = statusDsr;
+      statusEl.style.color = statusColor;
+    }
+
+    window.onload = function() {
+      calculateAll();
+    };
+  </script>
+</body>
+</html>
