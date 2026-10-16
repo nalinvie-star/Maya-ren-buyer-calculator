@@ -2,8 +2,8 @@
 <html lang="ms">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>Maya Realty Utara - REN Assistant</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Maya Realty Utara - Pembantu Hartanah</title>
   <style>
     :root {
       --primary: #0f4c81;
@@ -19,13 +19,13 @@
     * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
     body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; background-color: var(--bg-color); margin: 0; padding: 12px; color: var(--text-main); }
     
-    .container { max-width: 480px; margin: 0 auto; padding-bottom: 30px; }
+    .container { max-width: 620px; margin: 0 auto; padding-bottom: 30px; }
 
     .brand-card { background: linear-gradient(135deg, #0f4c81, #1e3a8a); color: white; padding: 20px; border-radius: 16px; text-align: center; margin-bottom: 15px; box-shadow: 0 4px 15px rgba(15, 76, 129, 0.2); }
     .brand-card h1 { font-size: 20px; margin: 0; font-weight: 700; letter-spacing: 0.5px; }
     .brand-card p { font-size: 11px; margin: 5px 0 0 0; opacity: 0.85; text-transform: uppercase; letter-spacing: 1.5px; font-weight: 600; }
 
-    /* Navigasi Tiga Tab */
+    /* Navigasi */
     .nav-tabs { display: flex; background: #e2e8f0; padding: 4px; border-radius: 10px; margin-bottom: 15px; gap: 4px; }
     .nav-tab { flex: 1; padding: 8px 4px; text-align: center; font-size: 11px; font-weight: 700; color: var(--text-muted); cursor: pointer; border-radius: 8px; border: none; background: transparent; transition: all 0.2s ease; }
     .nav-tab.active { background: var(--card-bg); color: var(--primary); box-shadow: 0 2px 8px rgba(0,0,0,0.08); }
@@ -67,21 +67,36 @@
     
     .copy-btn { background: #f97316; color: white; border: none; padding: 6px 12px; border-radius: 6px; font-size: 11px; font-weight: bold; cursor: pointer; margin-top: 6px; }
     .copy-btn:active { background: #c2410c; }
-  </style>
+  
+    .nav-tabs {flex-wrap:wrap;position:sticky;top:0;z-index:2}
+    .nav-tab{min-width:85px;min-height:40px}
+    .calc-row{gap:16px}.calc-row span:last-child{text-align:right;flex-shrink:0}
+    .note{font-size:12px;line-height:1.6;color:#526173}.warning{color:#991b1b;background:#fef2f2;padding:12px;border-radius:8px}
+    .check{display:flex;gap:10px;align-items:flex-start;line-height:1.5}.check input{width:auto;margin-top:3px}
+    .toolbar{display:flex;gap:8px;flex-wrap:wrap}.toolbar button{padding:10px;border:1px solid #cbd5e1;border-radius:8px;background:white;color:#0f4c81;cursor:pointer}
+    textarea{min-height:100px} button:focus-visible{outline:3px solid #2563eb}
+    @media(max-width:380px){.calc-row{font-size:12px;gap:8px}.card{padding:12px}}
+    @media print{.nav-tabs,.toolbar,.calc-action-btn,.copy-btn{display:none}.tab-content{display:none!important}#calcTab{display:block!important}.card{break-inside:avoid;box-shadow:none}body{background:white}}
+  .listing-filters{display:flex;gap:8px}.listing-filter{flex:1;padding:12px;border:1px solid #cbd5e1;border-radius:9px;background:white;color:var(--primary);font-weight:700;cursor:pointer}.listing-filter.active{background:var(--primary);color:white}.listing-card{border:1px solid var(--border-color);padding:16px;border-radius:12px;margin-top:12px}.listing-card h3{font-size:16px;margin:0 0 8px}.listing-card p{font-size:13px;line-height:1.6;overflow-wrap:anywhere}.listing-empty{text-align:center;padding:28px 12px;border:1px dashed #cbd5e1;border-radius:12px;color:var(--text-muted);font-size:13px;line-height:1.7}
+[hidden]{display:none!important}dialog{width:min(94vw,650px);max-height:94vh;overflow:auto;border:0;border-radius:16px;padding:18px}dialog::backdrop{background:rgba(15,23,42,.7)}#galleryImage{display:block;width:100%;max-height:60vh;object-fit:contain;background:#f1f5f9}#galleryImage:not([src]){display:none}.listing-card button{margin-right:8px;margin-top:12px}.script-text{overflow-wrap:anywhere}
+</style>
 </head>
 <body>
 
   <div class="container">
     <div class="brand-card">
       <h1>Maya Realty Utara</h1>
-      <p>REN Mobile Assistant & Calculator</p>
+      <p>Panduan Ejen Baharu & REN • v4</p>
     </div>
 
-    <!-- Sistem Navigasi Tiga Tab -->
+    <p class="note">Panduan ringkas untuk ejen baharu, pembantu REN dan REN baharu. Kalkulator anggaran subsale kediaman individu warganegara Malaysia di Semenanjung; bukan kelulusan bank atau sebut harga peguam.</p>
+    <div class="toolbar"><button onclick="saveLocal()">Simpan pada peranti</button><button onclick="exportData()">Eksport sandaran</button><button onclick="document.getElementById('importFile').click()">Import sandaran</button><button onclick="window.print()">Cetak anggaran</button></div>
+    <input id="importFile" type="file" accept="application/json,.json" hidden onchange="importData(this)"><p id="saveStatus" class="note" role="status" aria-live="polite">Simpan hanya anggaran kalkulator pada pelayar ini. Simpanan setiap peranti berasingan; tiada penyelarasan kumpulan.</p>
+    <!-- Navigasi -->
     <div class="nav-tabs">
-      <button class="nav-tab active" onclick="switchTab('calcTab', this)">Kalkulator</button>
-      <button class="nav-tab" onclick="switchTab('guideTab', this)">Kos Subsale</button>
-      <button class="nav-tab" onclick="switchTab('scriptTab', this)">Skrip REN</button>
+      <button class="nav-tab active" data-tab="calcTab" onclick="switchTab('calcTab', this)">Kalkulator</button>
+      <button class="nav-tab" data-tab="guideTab" onclick="switchTab('guideTab', this)">Kos Subsale</button>
+      <button class="nav-tab" data-tab="scriptTab" onclick="switchTab('scriptTab', this)">Skrip REN</button><button class="nav-tab" data-tab="listingTab" onclick="switchTab('listingTab', this)">Listing</button><button class="nav-tab" data-tab="caseTab" onclick="switchTab('caseTab', this)">Urus Kes</button>
     </div>
 
     <!-- TAB 1: KALKULATOR PEMBELI -->
@@ -89,9 +104,11 @@
       <div class="card">
         <div class="calc-section-title" style="margin-top:0;">A. Maklumat Hartanah & Pembeli</div>
         
+        <label>Kaedah Pembelian:</label><select id="c_mode" onchange="calculateAll()"><option value="loan">Pinjaman bank (anggaran)</option><option value="cash">Tunai</option></select>
         <label>Harga Rumah (RM):</label>
         <input type="number" id="c_price" value="300000" oninput="calculateAll()">
         
+        <label>Nilai Pasaran / Taksiran MOT (RM):</label><input type="number" id="c_market" value="0" min="0" oninput="calculateAll()"><div class="input-hint">0 = gunakan harga rumah. Asas MOT ialah nilai yang lebih tinggi.</div>
         <label>Margin Pinjaman (%):</label>
         <input type="number" id="c_margin" value="90" oninput="calculateAll()">
         
@@ -115,19 +132,30 @@
         <label>Booking Fee Telah Dibayar (RM):</label>
         <input type="number" id="c_booking" value="3000" oninput="calculateAll()">
 
+        <label>Had DSR Bank untuk Simulasi (%):</label><input id="c_dsrLimit" type="number" min="1" max="100" value="60" oninput="calculateAll()">
+        <label>Deposit Kontrak Dipersetujui (%):</label><input id="c_depositPct" type="number" min="0" max="100" value="10" oninput="calculateAll()"><div class="input-hint">Deposit kontrak dan sumbangan sendiri akibat margin bank adalah berbeza.</div>
+        <label>Pelepasan MOT Disahkan Peguam (RM):</label><input id="c_motRelief" type="number" min="0" value="0" oninput="calculateAll()">
+        <label>Pelepasan Duti Pinjaman Disahkan (RM):</label><input id="c_stampRelief" type="number" min="0" value="0" oninput="calculateAll()"><div class="input-hint">Tidak ditolak secara automatik hanya kerana rumah pertama. Masukkan amaun selepas kelayakan disahkan.</div>
+        <details><summary style="margin-top:16px;cursor:pointer">Laraskan kos mengikut sebut harga</summary>
+        <label>SST Fi Profesional (%):</label><input id="c_sst" type="number" value="8" min="0" max="100" oninput="calculateAll()">
+        <label>Disbursement SPA (RM):</label><input id="c_spaDisb" type="number" value="3000" min="0" oninput="calculateAll()">
+        <label>Disbursement Pinjaman (RM):</label><input id="c_loanDisb" type="number" value="3000" min="0" oninput="calculateAll()">
+        <label>Penilaian Termasuk Cukai & Belanja (RM):</label><input id="c_val" type="number" value="1200" min="0" oninput="calculateAll()">
+        <label>Takaful / Insurans Dibayar Tunai (RM):</label><input id="c_insurance" type="number" value="0" min="0" oninput="calculateAll()">
+        </details>
         <!-- Butang Kira Manual -->
         <button type="button" class="calc-action-btn" onclick="calculateAll()">KIRA SEMULA SEKARANG</button>
       </div>
 
       <div class="card">
         <div class="calc-section-title" style="margin-top:0;">B. Anggaran Pecahan Kos Pembelian</div>
-        <div class="calc-row"><span>Booking Fee (Contoh 3.24%):</span> <span id="r_bookingDisplay">RM 0.00</span></div>
-        <div class="calc-row"><span>Baki Deposit (Contoh 6.76%):</span> <span id="r_balanceDeposit">RM 0.00</span></div>
+        <div class="calc-row"><span>Booking Telah Dibayar:</span> <span id="r_bookingDisplay">RM 0.00</span></div>
+        <div class="calc-row"><span>Baki Sumbangan Harga Rumah:</span> <span id="r_balanceDeposit">RM 0.00</span></div>
         <div class="calc-row"><span>Duti Setem MOT (Pindah Milik):</span> <span id="r_mot">RM 0.00</span></div>
-        <div class="calc-row"><span>Fi Guaman SPA (Anggaran):</span> <span id="r_spaLegal">RM 0.00</span></div>
+        <div class="calc-row"><span>Fi SPA Termasuk SST:</span> <span id="r_spaLegal">RM 0.00</span></div>
         <div class="calc-row"><span>Duti Setem Perjanjian Pinjaman (0.5%):</span> <span id="r_loanStamp">RM 0.00</span></div>
-        <div class="calc-row"><span>Fi Guaman Pinjaman (Anggaran):</span> <span id="r_loanLegal">RM 0.00</span></div>
-        <div class="calc-row"><span>Fi Penilaian & Disbursement:</span> <span id="r_valDisb">RM 2,150.00</span></div>
+        <div class="calc-row"><span>Fi Pinjaman Termasuk SST:</span> <span id="r_loanLegal">RM 0.00</span></div>
+        <div class="calc-row"><span>Penilaian & Disbursement:</span> <span id="r_valDisb">RM 2,150.00</span></div>
         
         <label style="margin-top:12px;">Renovasi / Pindah / Utiliti (Anggaran):</label>
         <input type="number" id="c_renov" value="3000" oninput="calculateAll()">
@@ -135,15 +163,23 @@
 
       <div class="card">
         <div class="calc-section-title" style="margin-top:0;">C. Ringkasan Duit Perlu Disediakan</div>
-        <div class="calc-row"><span>Jumlah Keseluruhan Kos & Deposit:</span> <span id="r_totalCash">RM 0.00</span></div>
+        <div id="calcWarnings" class="note" role="status"></div>
+        <div class="calc-row"><span>Pinjaman Harga Rumah:</span><span id="r_loan"></span></div>
+        <div class="calc-row"><span>Deposit Kontrak:</span><span id="r_contractDeposit"></span></div>
+        <div class="calc-row"><span>Baki Deposit Kontrak Selepas Booking:</span><span id="r_contractBalance"></span></div>
+        <div class="calc-row"><span>Sumbangan Harga Rumah (Harga − Pinjaman):</span><span id="r_equity"></span></div>
+        <div class="calc-row"><span>Takaful / Insurans Tunai:</span><span id="r_insurance"></span></div>
+        <div class="calc-row"><span>Jumlah Kos & Sumbangan Harga Rumah:</span> <span id="r_totalCash">RM 0.00</span></div>
         <div class="calc-row" style="color:#059669;"><span>Tolak Booking Fee Telah Bayar:</span> <span id="r_lessBooking">- RM 0.00</span></div>
         <div class="calc-row" style="color:#059669;"><span>Tolak Pengeluaran EPF Akaun 2:</span> <span id="r_lessEpf">- RM 0.00</span></div>
         
         <div class="calc-total">
-          <div class="calc-total-title">Baki Tunai Perlu Standby (Buyer)</div>
+          <div class="calc-total-title">Baki Selepas Booking & KWSP Disahkan</div>
           <div class="calc-total-value" id="r_finalStandby">RM 0.00</div>
         </div>
         
+        <p class="note">Tunai sebelum pengeluaran KWSP diterima: <strong id="r_beforeEpf"></strong>. Gunakan hanya pengeluaran yang diluluskan dan tersedia mengikut masa bayaran. Baki simpanan KWSP bukan amaun kelulusan.</p>
+        <button class="copy-btn" onclick="copySummary()">Salin Ringkasan untuk Pembeli</button>
         <div class="monthly-installment">
           <span>Anggaran Ansuran Bulanan:</span>
           <span id="r_monthly" style="font-size: 15px;">RM 0.00</span>
@@ -151,10 +187,10 @@
       </div>
 
       <div class="card">
-        <div class="calc-section-title" style="margin-top:0;">D. Semakan Kelayakan DSR (Had 60%)</div>
+        <div class="calc-section-title" style="margin-top:0;">D. Saringan Awal Kemampuan</div>
         <div class="calc-row" style="margin-top: 4px;"><span>Nisbah Komitmen (DSR) Sebenar:</span> <span id="r_dsr">0.00%</span></div>
         <div class="calc-row"><span>Baki Pendapatan Selepas Komitmen & Ansuran:</span> <span id="r_leftIncome">RM 0.00</span></div>
-        <div class="calc-row" style="border-bottom:none;"><span>Status Kelayakan DSR (Had 60%):</span> <span id="r_dsrStatus" style="font-weight:700;">-</span></div>
+        <div class="calc-row" style="border-bottom:none;"><span>Status Saringan DSR:</span> <span id="r_dsrStatus" style="font-weight:700;">-</span></div>
       </div>
     </div>
 
@@ -163,173 +199,117 @@
       <div class="card">
         <div class="calc-section-title" style="margin-top:0;">Panduan Kos Pembelian (Subsale)</div>
         
-        <div class="cost-item">
-          <h4>1. Wang Pendahuluan / Booking Fee (3.24%)</h4>
-          <p>Dibayar semasa tandatangan Borang Tempahan kepada agensi (termasuk SST 8% untuk fi agensi). Menjadi bukti komitmen pembeli.</p>
-        </div>
-
-        <div class="cost-item">
-          <h4>2. Baki Deposit (6.76%)</h4>
-          <p>Baki penutup 10% deposit rumah yang dijelaskan semasa tandatangan Perjanjian Jual Beli (S&P), boleh dibayar tunai atau melalui pengeluaran KWSP Akaun 2.</p>
-        </div>
-
-        <div class="cost-item">
-          <h4>3. Duti Setem MOT (Pindah Milik)</h4>
-          <p>Cukai kerajaan untuk tukar nama geran (1% bagi RM100k pertama, 2% untuk seterusnya hingga RM500k, 3% hingga RM1 juta). *Layak pengecualian penuh jika rumah pertama bawah RM500k.*</p>
-        </div>
-
-        <div class="cost-item">
-          <h4>4. Fi Guaman SPA & Disbursement</h4>
-          <p>Yuran peguam pembeli untuk menyedia dan menyemak S&P (mengikut skala harga hartanah) ditambah kos urusan rasmi.</p>
-        </div>
-
-        <div class="cost-item">
-          <h4>5. Fi Guaman Pinjaman & Duti Setem MOC (0.5%)</h4>
-          <p>Kos guaman perjanjian loan dengan bank beserta duti setem gadaian hartanah (*Memorandum of Charge*) sebanyak 0.5% daripada jumlah pinjaman.</p>
-        </div>
-
-        <div class="cost-item">
-          <h4>6. Kos Penilaian (Valuation Fee)</h4>
-          <p>Caj panel penilai bank untuk mengesahkan nilai pasaran hartanah semasa sebelum pinjaman diluluskan.</p>
-        </div>
-
-        <div class="cost-item">
-          <h4>7. Takaful / Insurans (MRTT / MLTA)</h4>
-          <p>Perlindungan pinjaman rumah sekiranya berlaku kematian atau hilang upaya kekal.</p>
-        </div>
+<div class="cost-item"><h4>1. Booking & Sumbangan Sendiri</h4><p>Booking ialah sebahagian bayaran harga rumah, bukan kos tambahan. Jumlah dan jadual bayaran mengikut borang serta SPA. Margin 80% bermakna sumbangan harga rumah 20%, walaupun deposit kontrak 10%.</p></div>
+<div class="cost-item"><h4>2. MOT & Duti Pinjaman</h4><p>MOT menggunakan asas harga atau nilai pasaran yang lebih tinggi: 1%, 2%, 3% dan 4% mengikut lapisan nilai. Duti pinjaman dianggarkan 0.5% daripada pokok pinjaman. Pelepasan hanya dimasukkan selepas pengesahan peguam.</p></div>
+<div class="cost-item"><h4>3. Guaman & Kos Lain</h4><p>Skala anggaran subsale: 1.25% untuk RM500,000 pertama (minimum RM500), 1% untuk RM7 juta berikutnya. Melebihi RM7.5 juta memerlukan sebut harga. SST, disbursement, penilaian dan perlindungan diasingkan. Tetapan kos ialah contoh yang perlu dilaras.</p></div>
+<div class="cost-item"><h4>4. Masa Bayaran</h4><p>Sahkan tarikh deposit, SPA, pinjaman dan pengeluaran KWSP sebelum membuat janji. Kos yang bank biayai perlu disahkan melalui surat tawaran; versi ini menganggap semua kos sampingan dibayar tunai.</p></div>
+<div class="cost-item"><h4>5. DSR, Tunai & LPPSA</h4><p>DSR ialah (hutang sedia ada + ansuran baharu) ÷ pendapatan bersih. Had serta pendapatan diiktiraf berbeza antara bank. LPPSA perlu semakan kelayakan berasingan. Kiraan ini bukan keputusan pinjaman.</p></div>
+<p class="note">Rujukan awam: <a href="https://www.malaysianbar.org.my/article/members/laws-bc-rulings-and-practice-directions/other-laws/solicitors-remuneration-order-2023/sro-2023" target="_blank" rel="noopener">SRO 2023, Malaysian Bar</a> · <a href="https://www.hasil.gov.my/duti-setem/" target="_blank" rel="noopener">Duti Setem, HASiL</a>. Semakan rujukan: 15 Oktober 2026. Pakej khas, pembeli asing, syarikat dan transaksi bukan subsale memerlukan kiraan berasingan.</p>
       </div>
     </div>
 
     <!-- TAB 3: SKRIP LAPANGAN -->
-    <div id="scriptTab" class="tab-content">
-      <div class="card">
-        <div class="calc-section-title" style="margin-top:0;">Skrip Profiling Pembeli (WhatsApp / Mesej)</div>
-        
-        <div class="script-box">
-          <h4>Templat Mesej Info Pembeli</h4>
-          <div class="script-text" id="scriptText">Thank you for your interest in this property. To make our initial process smoother, may I request a brief profile below: 🙏
-
-* Purchase status: (First-time homebuyer / Second home, etc.)
-* Current occupation: (Example: Private sector technician/ teacher/ Self-employed etc.)
-* Financing type: (Bank Loan/ LPPSA/ Cash)
-* Estimated budget/ loan eligibility: (If checked)
-
-If comfortable, you may also share a copy of your latest payslip so we can assist with an early eligibility check. All information shared will be kept strictly confidential. 
-
-Thank you for your cooperation 😊</div>
-          <button class="copy-btn" onclick="copyScript()">Salin Skrip</button>
-        </div>
-      </div>
-    </div>
+<div id="memberBar" class="toolbar" hidden><button onclick="logoutMember()">Log keluar ahli</button></div>
+<div id="memberGate" class="tab-content"><div class="card"><h2 style="font-size:20px">Akses Ahli</h2><p class="note">Masukkan password kumpulan untuk melihat Skrip REN, Listing dan Urus Kes.</p><form onsubmit="loginMember(event)"><label for="memberPassword">Password</label><input id="memberPassword" type="password" autocomplete="current-password" required maxlength="512"><button id="loginButton" class="calc-action-btn" type="submit">Masuk</button></form><p id="loginStatus" role="status" class="note" aria-live="polite"></p></div></div>
+<div id="scriptTab" class="tab-content"><div class="card"><div class="calc-section-title">Skrip REN</div><div id="protectedScripts"></div></div></div>
+<div id="listingTab" class="tab-content">
+  <div class="card">
+    <div class="calc-section-title" style="margin-top:0">Listing Hartanah</div>
+    <p class="note">Listing untuk rujukan ahli. Sahkan ketersediaan dan terma dengan ejen pengendali sebelum mengiklankan atau mengatur viewing.</p>
+    <div class="listing-filters" aria-label="Kategori listing"><button id="saleFilter" class="listing-filter" aria-pressed="false" onclick="setListingType('jual')">Jual</button><button id="rentFilter" class="listing-filter active" aria-pressed="true" onclick="setListingType('sewa')">Sewa</button></div>
+    <label for="listingSearch">Cari kawasan, jenis atau rujukan</label><input id="listingSearch" type="search" placeholder="Contoh: Sungai Petani, teres" oninput="renderListings()">
+    <button class="copy-btn" onclick="loadListings()">Muat Semula Listing</button><p id="listingCount" class="note" role="status" aria-live="polite"></p><div id="listingResults"></div>
+  </div>
+</div>
+<div id="caseTab" class="tab-content"><div class="card" style="text-align:center;padding:32px 18px"><div class="calc-section-title" style="margin-top:0">Urus Kes</div><h2 style="font-size:20px;color:var(--primary)">Dalam pembinaan</h2><p class="note">Fungsi pengurusan kes akan ditambah kemudian.</p></div></div>
   </div>
 
   <script>
-    function switchTab(tabId, btnElement) {
-      document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
-      document.querySelectorAll('.nav-tab').forEach(el => el.classList.remove('active'));
-      document.getElementById(tabId).classList.add('active');
-      btnElement.classList.add('active');
+    async function copyText(text) {
+      try {if(!navigator.clipboard) throw new Error(); await navigator.clipboard.writeText(text); alert('Berjaya disalin.');}
+      catch(e){const box=document.createElement('textarea');box.value=text;document.body.appendChild(box);box.select();let ok=false;try{ok=document.execCommand('copy')}catch(_){} if(ok){box.remove();alert('Berjaya disalin.')}else{alert('Salin teks yang dipilih secara manual.');}}
     }
-
-    function copyScript() {
-      let text = document.getElementById("scriptText").innerText;
-      navigator.clipboard.writeText(text).then(() => {
-        alert("Skrip berjaya disalin!");
-      });
+    
+    function calcSpalegal(p){return p>0?Math.max(500,Math.min(p,500000)*.0125+Math.max(0,Math.min(p-500000,7000000))*.01):0}
+    function calcMot(p){return Math.min(p,100000)*.01+Math.max(0,Math.min(p-100000,400000))*.02+Math.max(0,Math.min(p-500000,500000))*.03+Math.max(0,p-1000000)*.04}
+    function installment(loan,annual,years){if(!loan)return 0;if(years<=0)return null;const n=years*12,r=annual/1200;return r===0?loan/n:loan*r/(-Math.expm1(-n*Math.log1p(r)))}
+    const el=id=>document.getElementById(id), money=n=>'RM '+n.toLocaleString('en-MY',{minimumFractionDigits:2,maximumFractionDigits:2});
+    let summary='';
+    function calculateAll(){
+      const warnings=[];
+      function num(id,max=1e12){const raw=el(id).value,n=Number(raw);if(raw===''||!Number.isFinite(n)||n<0||n>max){warnings.push('Semak input: '+(el(id).previousElementSibling?.textContent||id));return 0}return n}
+      const price=num('c_price'),cash=el('c_mode').value==='cash',margin=num('c_margin',100)/100,years=num('c_years',50),annual=num('c_rate',100),income=num('c_netIncome'),commit=num('c_commit'),epf=num('c_epf'),booking=num('c_booking'),renov=num('c_renov'),market=num('c_market'),limit=num('c_dsrLimit',100),sst=num('c_sst',100)/100;
+      const loan=cash?0:price*margin,equity=price-loan,contract=price*num('c_depositPct',100)/100;
+      const mot=Math.max(0,calcMot(Math.max(price,market))-num('c_motRelief'));
+      const stamp=cash?0:Math.max(0,loan*.005-num('c_stampRelief'));
+      const legalUnavailable=price>7500000||loan>7500000;
+      const spa=calcSpalegal(price)*(1+sst),legal=calcSpalegal(loan)*(1+sst),valDisb=num('c_spaDisb')+(loan>0?num('c_loanDisb')+num('c_val'):0),insurance=num('c_insurance');
+      const total=equity+mot+stamp+spa+legal+valDisb+insurance+renov,before=Math.max(0,total-booking),standby=Math.max(0,before-epf),monthly=installment(loan,annual,years);
+      if(!price)warnings.push('Masukkan harga rumah yang sah.');
+      if(booking>equity)warnings.push('Booking melebihi sumbangan sendiri. Sahkan pengagihan / pulangan lebihan dengan peguam.');
+      if(epf>before)warnings.push('KWSP melebihi baki kos; lebihan tidak dianggap wang pulangan.');
+      if(!income&&!cash)warnings.push('Pendapatan diperlukan untuk saringan DSR.');
+      if(monthly===null)warnings.push('Tempoh pinjaman mesti melebihi sifar.');
+      if(!limit)warnings.push('Had DSR mesti melebihi sifar.');
+      if(legalUnavailable)warnings.push('Harga / pinjaman melebihi RM7.5 juta: jumlah kos tidak dimuktamadkan. Dapatkan sebut harga guaman.');
+      const values={r_bookingDisplay:booking,r_balanceDeposit:Math.max(0,equity-booking),r_mot:mot,r_spaLegal:spa,r_loanStamp:stamp,r_loanLegal:legal,r_valDisb:valDisb,r_totalCash:total,r_lessBooking:booking,r_lessEpf:epf,r_finalStandby:standby,r_monthly:monthly??0,r_leftIncome:income-commit-(monthly??0),r_loan:loan,r_equity:equity,r_contractDeposit:contract,r_contractBalance:Math.max(0,contract-booking),r_insurance:insurance,r_beforeEpf:before};
+      for(const [id,value]of Object.entries(values))el(id).textContent=(id.startsWith('r_less')?'− ':'')+money(value);
+      if(legalUnavailable){['r_spaLegal','r_loanLegal','r_totalCash','r_finalStandby','r_beforeEpf'].forEach(id=>el(id).textContent='Perlu sebut harga');}
+      if(monthly===null)el('r_monthly').textContent='Semak tempoh';
+      const dsr=income>0&&monthly!==null?(commit+monthly)/income*100:null;
+      el('r_dsr').textContent=cash?'Tidak berkaitan':dsr===null?'Tidak dapat dikira':dsr.toFixed(2)+'%';
+      const status=el('r_dsrStatus');status.textContent=cash?'Pembelian tunai':dsr===null||!limit?'Maklumat tidak lengkap':dsr<=limit?'Dalam had simulasi '+limit+'%':'Melebihi had simulasi '+limit+'%';status.style.color=dsr!==null&&dsr<=limit?'#166534':'#991b1b';
+      el('calcWarnings').textContent=warnings.join(' ');el('calcWarnings').className=warnings.length?'note warning':'note';
+      summary=warnings.length?'Sila semak input / perkara berikut sebelum berkongsi: '+warnings.join(' '):`Anggaran pembelian rumah\nHarga: ${money(price)}\nPinjaman: ${money(loan)}\nTunai sebelum KWSP (selepas booking): ${money(before)}\nKWSP yang dimasukkan: ${money(epf)}\nBaki selepas KWSP: ${money(standby)}\nAnsuran: ${money(monthly||0)} / bulan\nAnggaran sahaja; kos sampingan dibayar tunai. Tertakluk sebut harga, kelulusan dan masa penerimaan KWSP.`;
     }
-
-    function calcSpalegal(price) {
-      if (price <= 500000) {
-        return price * 0.0125;
-      } else {
-        return (500000 * 0.0125) + ((price - 500000) * 0.01);
-      }
+    function copySummary(){copyText(summary)}
+    const fields=()=>[...document.querySelectorAll('#calcTab input[id],#calcTab select[id],#calcTab textarea[id]')];
+    function snapshot(){const data={};fields().forEach(e=>data[e.id]=e.type==='checkbox'?e.checked:e.value);return{app:'maya-realty-v2',data}}
+    function restore(obj){if(obj?.app!=='maya-realty-v2'||!obj.data||typeof obj.data!=='object')throw Error('Format sandaran tidak sah');const updates=fields().filter(e=>Object.hasOwn(obj.data,e.id));for(const e of updates){const v=obj.data[e.id];if(e.type==='checkbox'?typeof v!=='boolean':typeof v!=='string'||v.length>10000)throw Error('Nilai sandaran tidak sah')};updates.forEach(e=>{if(e.type==='checkbox')e.checked=obj.data[e.id];else e.value=obj.data[e.id]});calculateAll()}
+    function saveLocal(){try{localStorage.setItem('maya-realty-v2',JSON.stringify(snapshot()));el('saveStatus').textContent='Disimpan pada peranti ini: '+new Date().toLocaleString('ms-MY')}catch(e){el('saveStatus').textContent='Simpanan tidak tersedia. Gunakan eksport sandaran.'}}
+    function exportData(){const url=URL.createObjectURL(new Blob([JSON.stringify(snapshot(),null,2)],{type:'application/json'}));const a=document.createElement('a');a.href=url;a.download='maya-realty-sandaran.json';a.click();setTimeout(()=>URL.revokeObjectURL(url),1000)}
+    async function importData(input){try{const f=input.files[0];if(!f)return;if(f.size>200000)throw Error('Fail terlalu besar');restore(JSON.parse(await f.text()));el('saveStatus').textContent='Sandaran diimport. Tekan Simpan untuk kekalkan pada peranti.'}catch(e){alert('Import gagal: '+e.message)}finally{input.value=''}}
+    // Set only the public deployment URL here. NEVER place a password in this file.
+    const API_URL = 'https://script.google.com/macros/s/AKfycbzl9UWfNp8FrUlmRO0c8rTVMZQLilPbyDwrgah33kkYhnVslJbnszwjvAPqVHKBz-I4/exec';
+    let memberToken='',pendingTab='listingTab',memberListings=[],currentCategory='sewa',galleryPhotos=[],galleryIndex=0,galleryListing='',galleryVersion=0;
+    function node(tag,text,cls){const x=document.createElement(tag);if(text!=null)x.textContent=text;if(cls)x.className=cls;return x}
+    function button(text,fn){const b=node('button',text,'copy-btn');b.type='button';b.onclick=fn;return b}
+    async function api(action,data={}){
+      if(!/^https:\/\/script\.google\.com\/macros\/s\/[\w-]+\/exec$/.test(API_URL))throw Error('Sambungan belum diaktifkan. Pemilik perlu menetapkan URL Apps Script.');
+      const controller=new AbortController(),timeout=setTimeout(()=>controller.abort(),60000);
+      try{const response=await fetch(API_URL,{method:'POST',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify({action,...data,token:memberToken}),redirect:'follow',credentials:'omit',signal:controller.signal});if(!response.ok)throw Error('Pelayan tidak dapat dihubungi.');let result;try{result=await response.json()}catch(e){throw Error('Respons bukan JSON. Semak deployment Apps Script: Execute as Me, akses Anyone, URL /exec.')}if(!result.ok){if(result.code==='AUTH'){clearMember();activateTab('memberGate')}throw Error(result.message||'Permintaan gagal.')}return result;}
+      catch(e){if(e.name==='AbortError')throw Error('Sambungan mengambil masa terlalu lama. Cuba semula.');if(e instanceof TypeError)throw Error('Tidak dapat menyambung. Semak internet, URL /exec dan tetapan deployment Apps Script.');throw e}finally{clearTimeout(timeout)}
     }
-
-    function calcMot(price) {
-      let mot = 0;
-      if (price > 0) {
-        if (price <= 100000) {
-          mot = price * 0.01;
-        } else if (price <= 500000) {
-          mot = (100000 * 0.01) + ((price - 100000) * 0.02);
-        } else {
-          mot = (100000 * 0.01) + (400000 * 0.02) + ((price - 500000) * 0.03);
-        }
-      }
-      return mot;
+    function activateTab(id){document.querySelectorAll('.tab-content').forEach(x=>x.classList.toggle('active',x.id===id));document.querySelectorAll('.nav-tab').forEach(b=>b.classList.toggle('active',b.dataset.tab===(id==='memberGate'?pendingTab:id)))}
+    async function switchTab(tabId,btn){
+      if(['listingTab','scriptTab','caseTab'].includes(tabId)&&!memberToken){pendingTab=tabId;activateTab('memberGate');return}
+      activateTab(tabId);if(tabId==='listingTab'&&!memberListings.length)await loadListings();if(tabId==='scriptTab')await loadScripts();
     }
-
-    function calculateAll() {
-      let price = parseFloat(document.getElementById('c_price').value) || 0;
-      let margin = (parseFloat(document.getElementById('c_margin').value) || 0) / 100;
-      let years = parseFloat(document.getElementById('c_years').value) || 35;
-      let rate = (parseFloat(document.getElementById('c_rate').value) || 0) / 100 / 12;
-      let netIncome = parseFloat(document.getElementById('c_netIncome').value) || 0;
-      let commit = parseFloat(document.getElementById('c_commit').value) || 0;
-      let epf = parseFloat(document.getElementById('c_epf').value) || 0;
-      let booking = parseFloat(document.getElementById('c_booking').value) || 0;
-      let renov = parseFloat(document.getElementById('c_renov').value) || 0;
-
-      let loan = price * margin;
-      let totalDeposit = price * 0.10; // 10% deposit keseluruhan
-      let balanceDeposit = totalDeposit - booking; // Baki deposit selepas tolak booking
-      if(balanceDeposit < 0) balanceDeposit = 0;
-
-      let mot = calcMot(price);
-      let spaLegal = calcSpalegal(price);
-      let loanStamp = loan * 0.005;
-      let loanLegal = calcSpalegal(loan);
-      let valuationDisb = 650 + 1500; // 650 val + 1500 disb
-
-      let totalOtherCosts = mot + spaLegal + loanStamp + loanLegal + valuationDisb + renov;
-      let totalCashNeeded = totalDeposit + totalOtherCosts; // Termasuk keseluruhan deposit 10% + kos lain
-      
-      let finalStandby = totalCashNeeded - booking - epf;
-      if(finalStandby < 0) finalStandby = 0;
-
-      let months = years * 12;
-      let monthly = 0;
-      if (rate > 0 && months > 0) {
-        monthly = (loan * rate * Math.pow(1 + rate, months)) / (Math.pow(1 + rate, months) - 1);
-      }
-
-      let totalCommitAfter = commit + monthly;
-      let dsr = netIncome > 0 ? (totalCommitAfter / netIncome) * 100 : 0;
-      let leftIncome = netIncome - totalCommitAfter;
-
-      let targetDsr = 60; // Tetap 60%
-      let statusDsr = "Lepas (Dalam Had 60%)";
-      let statusColor = "#166534";
-      if(dsr > targetDsr) {
-        statusDsr = "Melebihi Had 60% (Berisiko)";
-        statusColor = "#991b1b";
-      }
-
-      document.getElementById('r_bookingDisplay').innerText = "RM " + booking.toLocaleString('en-MY', {minimumFractionDigits: 2, maximumFractionDigits: 2});
-      document.getElementById('r_balanceDeposit').innerText = "RM " + balanceDeposit.toLocaleString('en-MY', {minimumFractionDigits: 2, maximumFractionDigits: 2});
-      document.getElementById('r_mot').innerText = "RM " + mot.toLocaleString('en-MY', {minimumFractionDigits: 2, maximumFractionDigits: 2});
-      document.getElementById('r_spaLegal').innerText = "RM " + spaLegal.toLocaleString('en-MY', {minimumFractionDigits: 2, maximumFractionDigits: 2});
-      document.getElementById('r_loanStamp').innerText = "RM " + loanStamp.toLocaleString('en-MY', {minimumFractionDigits: 2, maximumFractionDigits: 2});
-      document.getElementById('r_loanLegal').innerText = "RM " + loanLegal.toLocaleString('en-MY', {minimumFractionDigits: 2, maximumFractionDigits: 2});
-      
-      document.getElementById('r_totalCash').innerText = "RM " + totalCashNeeded.toLocaleString('en-MY', {minimumFractionDigits: 2, maximumFractionDigits: 2});
-      document.getElementById('r_lessBooking').innerText = "- RM " + booking.toLocaleString('en-MY', {minimumFractionDigits: 2, maximumFractionDigits: 2});
-      document.getElementById('r_lessEpf').innerText = "- RM " + epf.toLocaleString('en-MY', {minimumFractionDigits: 2, maximumFractionDigits: 2});
-      document.getElementById('r_finalStandby').innerText = "RM " + finalStandby.toLocaleString('en-MY', {minimumFractionDigits: 2, maximumFractionDigits: 2});
-      
-      document.getElementById('r_monthly').innerText = monthly.toLocaleString('en-MY', {minimumFractionDigits: 2, maximumFractionDigits: 2});
-      document.getElementById('r_dsr').innerText = dsr.toFixed(2) + "%";
-      document.getElementById('r_leftIncome').innerText = "RM " + leftIncome.toLocaleString('en-MY', {minimumFractionDigits: 2, maximumFractionDigits: 2});
-      
-      let statusEl = document.getElementById('r_dsrStatus');
-      statusEl.innerText = statusDsr;
-      statusEl.style.color = statusColor;
+    async function loginMember(event){event.preventDefault();const b=el('loginButton');b.disabled=true;el('loginStatus').textContent='Menyemak akses…';try{const r=await api('login',{password:el('memberPassword').value});memberToken=r.token;el('memberPassword').value='';el('loginStatus').textContent='';el('memberBar').hidden=false;await switchTab(pendingTab)}catch(e){el('loginStatus').textContent=e.message}finally{b.disabled=false}}
+    function clearMember(){memberToken='';memberListings=[];galleryVersion++;el('memberBar').hidden=true;el('listingResults').replaceChildren();el('protectedScripts').replaceChildren();closeGallery();}
+    function logoutMember(){const token=memberToken;if(token)api('logout').catch(()=>{});clearMember();activateTab('calcTab')}
+    async function loadScripts(){el('protectedScripts').textContent='Memuatkan skrip…';try{const r=await api('scripts');if(!memberToken)return;el('protectedScripts').replaceChildren();r.scripts.forEach(item=>{const box=node('div',null,'script-box');box.append(node('h4',item.title),node('div',item.text,'script-text'),button('Salin Skrip',()=>copyText(item.text)));el('protectedScripts').append(box)})}catch(e){el('protectedScripts').textContent=e.message}}
+    async function loadListings(){el('listingCount').textContent='Memuatkan listing…';try{const r=await api('listings');if(!memberToken)return;memberListings=r.listings;renderListings()}catch(e){el('listingCount').textContent=e.message}}
+    function setListingType(type){currentCategory=type;for(const [id,t]of [['saleFilter','jual'],['rentFilter','sewa']]){el(id).classList.toggle('active',type===t);el(id).setAttribute('aria-pressed',String(type===t))}renderListings()}
+    function listingText(r){
+      const lines=[r.Property_Name||r.Property_Type||'Listing Sewa',r.Location?('Lokasi: '+r.Location):'',r.Monthly_Rent_RM?('Sewa: RM '+r.Monthly_Rent_RM+' / bulan'):'',r.Built_Up_Sqft?('Keluasan: '+r.Built_Up_Sqft+' sqft'):''];
+      for(const [key,label]of [['Bedrooms','Bilik'],['Bathrooms','Bilik air'],['Parking_Spaces','Parkir'],['Furnishing','Perabot'],['Unit_Floor','Tingkat'],['Tenant_Eligibility','Kelayakan penyewa']])if(r[key]!=='')lines.push(label+': '+r[key]);
+      if(r.Security_Deposit_Months!==''||r.Advance_Rent_Months!==''||r.Utility_Deposit_Months!=='')lines.push('Deposit / bayaran awal (bulan): '+(r.Security_Deposit_Months||'?')+' + '+(r.Advance_Rent_Months||'?')+' + '+(r.Utility_Deposit_Months||'?')+' (sekuriti + sewa awal + utiliti)');
+      lines.push('Rujukan: '+r.Listing_ID);if(r.Listing_Agent)lines.push('Ejen pengendali: '+r.Listing_Agent);if(r.Agent_Phone)lines.push('Telefon: '+r.Agent_Phone);if(r.Status)lines.push('Status: '+r.Status);if(r.Updated_Date)lines.push('Dikemas kini: '+r.Updated_Date);return lines.filter(Boolean).join('\n');
     }
-
+    function renderListings(){const root=el('listingResults');root.replaceChildren();if(!memberToken)return;const q=el('listingSearch').value.trim().toLowerCase();const rows=currentCategory==='sewa'?memberListings.filter(r=>[r.Listing_ID,r.Property_Name,r.Location,r.Property_Type].join(' ').toLowerCase().includes(q)):[];el('listingCount').textContent=rows.length+' listing '+currentCategory;if(!rows.length){root.append(node('p',currentCategory==='jual'?'Listing jualan akan ditambah kemudian.':q?'Tiada listing sepadan.':'Belum ada listing sewa.','listing-empty'));return}rows.forEach(r=>{const card=node('article',null,'listing-card');card.append(node('h3',r.Property_Name||r.Property_Type||r.Listing_ID),node('div',listingText(r),'script-text'));if(r.Remarks)card.append(node('p','Catatan ejen: '+r.Remarks,'note'));card.append(button('Salin Butiran',()=>copyText(listingText(r))),button('Lihat Galeri',()=>openGallery(r.Listing_ID)));root.append(card)})}
+    async function openGallery(id){galleryVersion++;const v=galleryVersion;galleryListing=id;galleryPhotos=[];galleryIndex=0;el('photoDialog').showModal();el('galleryTitle').textContent='Gambar '+id;el('galleryStatus').textContent='Memuatkan senarai gambar…';el('galleryImage').removeAttribute('src');el('downloadPhoto').disabled=true;try{const r=await api('photos',{listingId:id});if(v!==galleryVersion||!memberToken)return;galleryPhotos=r.photos;if(!galleryPhotos.length){el('galleryStatus').textContent='Tiada gambar JPG, PNG, WEBP atau GIF di bawah 5 MB dalam folder ini.';return}await showPhoto(0)}catch(e){if(v===galleryVersion)el('galleryStatus').textContent=e.message}}
+    async function showPhoto(index){if(!galleryPhotos.length)return;galleryIndex=(index+galleryPhotos.length)%galleryPhotos.length;const photo=galleryPhotos[galleryIndex],v=++galleryVersion;el('galleryImage').removeAttribute('src');el('downloadPhoto').disabled=true;el('galleryStatus').textContent='Memuatkan '+(galleryIndex+1)+' / '+galleryPhotos.length+'…';try{const r=await api('image',{listingId:galleryListing,fileId:photo.id});if(v!==galleryVersion||!memberToken)return;if(!['image/jpeg','image/png','image/webp','image/gif'].includes(r.mime))throw Error('Format gambar tidak disokong.');el('galleryImage').src='data:'+r.mime+';base64,'+r.base64;el('galleryImage').alt=r.name;el('galleryStatus').textContent=(galleryIndex+1)+' / '+galleryPhotos.length+' • '+r.name;el('downloadPhoto').disabled=false;el('downloadPhoto').dataset.name=r.name}catch(e){if(v===galleryVersion)el('galleryStatus').textContent=e.message}}
+    function closeGallery(){galleryVersion++;const d=el('photoDialog');if(d.open)d.close();el('galleryImage').removeAttribute('src');galleryPhotos=[];el('downloadPhoto').disabled=true;}
+    function downloadPhoto(){const src=el('galleryImage').getAttribute('src');if(!src)return;const a=node('a');a.href=src;a.download=el('downloadPhoto').dataset.name||'gambar.jpg';document.body.append(a);a.click();a.remove()}
+    // Associate labels for keyboard / screen-reader navigation.
+    document.querySelectorAll('label').forEach(label=>{const next=label.nextElementSibling;if(next?.matches('input[id],select[id],textarea[id]'))label.htmlFor=next.id});
     window.onload = function() {
       calculateAll();
+
+      try{const saved=localStorage.getItem('maya-realty-v2');if(saved){restore(JSON.parse(saved));el('saveStatus').textContent='Simpanan terdahulu dimuatkan pada peranti ini.'}}catch(e){el('saveStatus').textContent='Simpanan terdahulu tidak dapat dimuatkan. Gunakan import sandaran.'}
     };
   </script>
+<dialog id="photoDialog"><div class="toolbar"><button onclick="closeGallery()">Tutup</button></div><h3 id="galleryTitle"></h3><img id="galleryImage" alt="Gambar listing"><p id="galleryStatus" class="note" role="status"></p><div class="toolbar"><button onclick="showPhoto(galleryIndex-1)">‹ Sebelum</button><button onclick="showPhoto(galleryIndex+1)">Seterusnya ›</button><button id="downloadPhoto" onclick="downloadPhoto()" disabled>Muat Turun Gambar</button></div><p class="note">Jika telefon membuka gambar, tekan lama gambar untuk pilihan simpan.</p></dialog>
 </body>
 </html>
